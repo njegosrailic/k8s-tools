@@ -5,9 +5,10 @@ A small image with useful Kubernetes tools that I use on daily basis.
 It can be used with [kubernetes-plugin](https://github.com/jenkinsci/kubernetes-plugin) on Jenkins in case you run agents on Kubernetes. Here is the Jenkinsfile example:
 
 ```
-def label = "worker-${UUID.randomUUID().toString()}"
+def label = "k8s-worker-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, containers: [
+    containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:3.10-1-alpine', args: '${computer.jnlpmac} ${computer.name}'),
   containerTemplate(name: 'k8s-tools', image: 'njegosrailic/k8s-tools:0.1.0', command: 'cat', ttyEnabled: true),
 ],
 volumes: [
