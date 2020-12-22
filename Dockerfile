@@ -15,16 +15,18 @@ LABEL org.label-schema.vcs-ref=$GIT_REF \
       org.label-schema.build-date=$BUILD_DATE
 
 ENV CONFTEST_VERSION="0.19.0"
-ENV HELM_VERSION="v3.4.1"
+ENV HADOLINT_VERSION="1.19.0"
+ENV HELM_VERSION="3.4.1"
 ENV KUBEAUDIT_VERSION="0.11.6"
-ENV KUBECTL_VERSION="v1.20.1"
+ENV KUBECTL_VERSION="1.20.1"
 ENV KUBEVAL_VERSION="0.15.0"
 ENV KUSTOMIZE_VERSION="3.8.8"
 
 ENV CONFTEST_URL="https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
-ENV HELM_URL="https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz"
+ENV HADOLINT_URL="https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-x86_64"
+ENV HELM_URL="https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz"
 ENV KUBEAUDIT_URL="https://github.com/Shopify/kubeaudit/releases/download/v${KUBEAUDIT_VERSION}/kubeaudit_${KUBEAUDIT_VERSION}_linux_amd64.tar.gz"
-ENV KUBECTL_URL="https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+ENV KUBECTL_URL="https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 ENV KUBEVAL_URL="https://github.com/instrumenta/kubeval/releases/download/${KUBEVAL_VERSION}/kubeval-linux-amd64.tar.gz"
 ENV KUSTOMIZE_URL="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz"
 
@@ -35,6 +37,9 @@ RUN apk add --no-cache ca-certificates bash git curl jq \
     && mv conftest /usr/local/bin/conftest \
     && chmod +x /usr/local/bin/conftest \
     && conftest --version \
+    && wget -q ${HADOLINT_URL} -O /usr/local/bin/hadolint \
+    && chmod +x /usr/local/bin/hadolint \
+    && hadolint --version \
     && wget -q ${HELM_URL} -O - | tar -xzO linux-amd64/helm > /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm \
     && helm version \
